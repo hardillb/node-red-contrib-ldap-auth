@@ -1,0 +1,19 @@
+{
+  "name": "bluepages-auth",
+  "version": "0.0.0",
+  "description": "Bluepages authentication module for Node-RED ",
+  "main": "bluepages-auth.js",
+  "dependencies": {
+    "LDAP": "~1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bluepages",
+    "node-red"
+  ],
+  "author": "Benjamin Hardill <hardillb@gmail.com> (http://www.hardill.me.uk/wordpress)",
+  "license": "Apache"
+}
