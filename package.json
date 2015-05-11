@@ -15,6 +15,10 @@
     "bluepages",
     "node-red"
   ],
+  "repository" : {
+        "type":"git",
+        "url":"https://github.com/hardillb/node-red-contrib-ldap-auth.git"
+    },
   "author": "Benjamin Hardill <hardillb@gmail.com> (http://www.hardill.me.uk/wordpress)",
   "license": "Apache"
 }
