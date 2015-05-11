@@ -1,33 +1,47 @@
 var when = require("when");
+var mustache = require("mustache");
 var LDAP = require("LDAP");
  
+var filterTemplate = '';
+
+var searchOpts = {
+		scope: '',
+		attrs: ''
+	};
+
 var options = {
-	uri: 'ldap://bluepages.ibm.com',
-	version: 3,
-	starttls: true,
-	reconnect: true
-};
-
-
+		uri: '',
+		version: 3,
+		starttls: true,
+		reconnect: true
+	};
 
 module.exports = {
+	setup: function(args) {
+		searchOpts.base = args.base;
+		filterTemplate = args.filterTemplate;
+		options.uri = args.uri
+
+		return this;
+	},
     type: "credentials",
     users: function(username) {
         return when.promise(function(resolve) {
-
         	var ldap = new LDAP(options);
 			ldap.open(function(err){
 				 // check user in ldap
-	            var searchOpts = {
-	            	base: 'ou=bluepages,o=ibm.com',
-	            	filter: 'mail=' + username,
-	            	scope: '',
-	            	attrs:''
 
-	            };
+				if (err) {
+					console.log("error in open");
+					console.log(err);
+				}
+
+				var temp = {};
+				temp.username = username;
+				searchOpts.filter = mustache.render(filterTemplate, temp);
 	            ldap.search(searchOpts, function(err,data){
 	            	if (err) {
-	            		console.log(err);
+	            		console.log("err -" + err);
 	            		resolve(null);
 	            		ldap.close();
 	            	} else if (data) {
@@ -47,17 +61,12 @@ module.exports = {
     },
     authenticate: function(username,password) {
         return when.promise(function(resolve) {
-
-            var ldap = new LDAP(options);
+        	var ldap = new LDAP(options);
 			ldap.open(function(err){
 				// authenticate ldap
-				var searchOpts = {
-	            	base: 'ou=bluepages,o=ibm.com',
-	            	filter: 'mail=' + username,
-	            	scope: '',
-	            	attrs:''
-
-	            };
+				var temp = {};
+				temp.username = username;
+				searchOpts.filter = mustache.render(filterTemplate, temp);
 	            ldap.search(searchOpts, function(err,data){
 	            	if (err) {
 	            		console.log(err);

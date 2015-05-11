@@ -1,10 +1,11 @@
 {
-  "name": "bluepages-auth",
+  "name": "node-red-contrib-ldap-auth",
   "version": "0.0.0",
-  "description": "Bluepages authentication module for Node-RED ",
-  "main": "bluepages-auth.js",
+  "description": "LDAP authentication module for Node-RED ",
+  "main": "node-red-contrib-ldap-auth.js",
   "dependencies": {
-    "LDAP": "~1.2.1"
+    "LDAP": "~1.2.1",
+    "mustache": "~2.0.0"
   },
   "devDependencies": {},
   "scripts": {
