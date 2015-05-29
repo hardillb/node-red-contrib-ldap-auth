@@ -1,11 +1,11 @@
 {
   "name": "node-red-contrib-ldap-auth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LDAP authentication module for Node-RED ",
   "main": "node-red-contrib-ldap-auth.js",
   "dependencies": {
-    "LDAP": "~1.2.1",
-    "mustache": "~2.0.0"
+    "mustache": "~2.0.0",
+    "ldapjs": "~0.7.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -15,10 +15,10 @@
     "bluepages",
     "node-red"
   ],
-  "repository" : {
-        "type":"git",
-        "url":"https://github.com/hardillb/node-red-contrib-ldap-auth.git"
-    },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hardillb/node-red-contrib-ldap-auth.git"
+  },
   "author": "Benjamin Hardill <hardillb@gmail.com> (http://www.hardill.me.uk/wordpress)",
   "license": "Apache"
 }
