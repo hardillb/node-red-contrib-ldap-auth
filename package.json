@@ -4,7 +4,7 @@
   "description": "LDAP authentication module for Node-RED ",
   "main": "node-red-contrib-ldap-auth.js",
   "dependencies": {
-    "when": "~3.8.0",
+    "when": "~3.7.0",
     "mustache": "~2.3.0",
     "ldapjs": "~1.0.0"
   },
