@@ -23,9 +23,6 @@ var ldap_bind_dn = null;
 var ldap_bind_pw = null;
 
 var options = {
-	'tlsOptions': {
-		'rejectUnauthorized': false,
-	}
 };
 
 var searchOpts = {
@@ -41,6 +38,11 @@ module.exports = {
 		if(args.bind_dn) {
 			ldap_bind_dn = args.bind_dn;
 			ldap_bind_pw = args.bind_pw;
+		}
+		if(args.no_verify_ssl) {
+			options.tlsOptions= {
+				'rejectUnauthorized': false,
+			};
 		}
 
 		return this;

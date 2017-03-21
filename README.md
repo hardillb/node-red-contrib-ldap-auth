@@ -24,3 +24,5 @@ If your LDAP server requires authentication before it can search, you can use th
       bind_dn: 'cn=authuser,o=company.com',
       bind_pw: 'yourlittlesecret',
     }),
+
+If your LDAP server is not using a verifiable SSL certificate, you can set the 'no_verify_ssl' parameter to 'true' (boolean) and it will not validate the connection.
