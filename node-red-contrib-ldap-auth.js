@@ -19,6 +19,8 @@ var ldapjs = require("ldapjs");
 
 
 var filterTemplate = '';
+var ldap_bind_dn = null;
+var ldap_bind_pw = null;
 
 var options = {
 };
@@ -33,6 +35,15 @@ module.exports = {
 		options.url = args.uri;
 		searchOpts.base = args.base;
 		filterTemplate = args.filterTemplate;
+		if(args.bind_dn) {
+			ldap_bind_dn = args.bind_dn;
+			ldap_bind_pw = args.bind_pw;
+		}
+		if(args.no_verify_ssl) {
+			options.tlsOptions= {
+				'rejectUnauthorized': false,
+			};
+		}
 
 		return this;
 	},
@@ -40,65 +51,88 @@ module.exports = {
 	users: function(username) {
 		return when.promise(function(resolve) {
 			var ldap = ldapjs.createClient(options);
-			var temp = {};
-			temp.username = username;
-			searchOpts.filter = mustache.render(filterTemplate, temp);
-			ldap.search(searchOpts.base,searchOpts,function(err, res){
-				var found = false;
+			var fn = function(err) {
 				if (err) {
-					console.log(err);
 					resolve(null);
 					ldap.unbind();
-				} else {
-					res.on('searchEntry', function(entry){
-						found = true;
-						resolve({ username: username, permissions: "*" });
-						ldap.unbind();
-					});
-					res.on('end', function(status) {
-						if (!found) {
-							resolve(null);
-							ldap.unbind();
-						}
-					});
 				}
-				
-			});
+				var temp = {};
+				temp.username = username;
+				searchOpts.filter = mustache.render(filterTemplate, temp);
+				ldap.search(searchOpts.base,searchOpts,function(err, res){
+					var found = false;
+					if (err) {
+						console.log(err);
+						resolve(null);
+						ldap.unbind();
+					} else {
+						res.on('searchEntry', function(entry){
+							found = true;
+							resolve({ username: username, permissions: "*" });
+							ldap.unbind();
+						});
+						res.on('end', function(status) {
+							if (!found) {
+								resolve(null);
+								ldap.unbind();
+							}
+						});
+					}
+				});
+			};
+			if(ldap_bind_dn) {
+				ldap.bind(ldap_bind_dn, ldap_bind_pw, fn);
+			}
+			else {
+				fn(null);
+			}
 		});
 	},
 	authenticate: function(username, password) {
 		return when.promise(function(resolve) {
 			var ldap = ldapjs.createClient(options);
-			var temp = {};
-			temp.username = username;
-			searchOpts.filter = mustache.render(filterTemplate, temp);
-			ldap.search(searchOpts.base,searchOpts,function(err, res){
-				var found = false;
+			var fn = function(err) {
 				if (err) {
-					console.log(err);
 					resolve(null);
 					ldap.unbind();
-				} else {
-					res.on('searchEntry', function(entry){
-						found = true;
-						ldap.bind(entry.dn, password, function(err){
-							if (!err) {
-								resolve({ username: username, permissions: "*" });
-								ldap.unbind();
-							} else {
+				}
+				var temp = {};
+				temp.username = username;
+				searchOpts.filter = mustache.render(filterTemplate, temp);
+				ldap.search(searchOpts.base,searchOpts,function(err, res){
+					var found = false;
+					if (err) {
+						console.log(err);
+						resolve(null);
+						ldap.unbind();
+					} else {
+						res.on('searchEntry', function(entry){
+							found = true;
+							ldap.bind(entry.dn, password, function(err){
+								if (!err) {
+									resolve({ username: username, permissions: "*" });
+									ldap.unbind();
+								} else {
+									resolve(null);
+									ldap.unbind();
+								}
+							});
+						});
+						res.on('end', function(status){
+							if (!found) {
 								resolve(null);
 								ldap.unbind();
 							}
 						});
-					});
-					res.on('end', function(status){
-						if (!found) {
-							resolve(null);
-							ldap.unbind();
-						}
-					});
-				}
-			});
+					}
+				});
+			};
+			if(ldap_bind_dn) {
+				ldap.bind(ldap_bind_dn, ldap_bind_pw, fn);
+			}
+			else {
+				fn(null);
+			}
 		});
 	},
 	default: function() {
