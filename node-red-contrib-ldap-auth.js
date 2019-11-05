@@ -51,6 +51,10 @@ module.exports = {
 	users: function(username) {
 		return when.promise(function(resolve) {
 			var ldap = ldapjs.createClient(options);
+			ldap.on('error', err => {
+				console.error(err);
+				resolve(null);
+			});
 			var fn = function(err) {
 				if (err) {
 					resolve(null);
@@ -91,6 +95,10 @@ module.exports = {
 	authenticate: function(username, password) {
 		return when.promise(function(resolve) {
 			var ldap = ldapjs.createClient(options);
+			ldap.on('error', err => {
+				console.error(err);
+				resolve(null);
+			});
 			var fn = function(err) {
 				if (err) {
 					resolve(null);
