@@ -22,6 +22,8 @@ var filterTemplate = '';
 var ldap_bind_dn = null;
 var ldap_bind_pw = null;
 
+var anon_read = false;
+
 var options = {
 };
 
@@ -44,7 +46,9 @@ module.exports = {
 				'rejectUnauthorized': false,
 			};
 		}
-
+        if(args.anon_read) {
+            anon_read = args.anon_read;
+        }
 		return this;
 	},
 	type: "credentials",
@@ -147,7 +151,11 @@ module.exports = {
         return when.promise(function(resolve) {
             // Resolve with the user object for the default user.
             // If no default user exists, resolve with null.
-            resolve(null);
+            if (anon_read) {
+                resolve({anonymous: true, permissions:"read"});
+            } else {
+                resolve(null);
+            }
         });
     }
 };
