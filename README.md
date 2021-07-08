@@ -26,6 +26,19 @@ If your LDAP server requires authentication before it can search, you can use th
       bind_pw: 'yourlittlesecret',
     }),
 
+## Security Group Filtering
+
+If your LDAP login needs to be restricted to a specifc group, you can use an advanced ``filterTemplate`` to filter users to a specific group.
+
+```js
+filterTemplate: '(&(sAMAccountName={{username}})(memberOf=CN=ExampleGroup,OU=Security Groups,OU=Groups,OU=Corp,DC=example,DC=com))',
+````
+
+You can also combine multiple filters, see https://ldap.com/ldap-filters/.
+ * AND Filters `(&(<first>)(<second>)(<third>))`
+ * OR Filters `(|(<first>)(<second>)(<third>))`
+ * Combined Filters `(&(<first>)(|(<first_or>)(<second_or>)))` (e.g. filter for multiple groups that should have access)
+
 ## Certificate Verification
 If your LDAP server is not using a verifiable SSL certificate, you can set the ``no_verify_ssl`` parameter to ``true`` (boolean) and it will not validate the connection.
 
