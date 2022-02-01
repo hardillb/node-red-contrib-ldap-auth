@@ -16,6 +16,11 @@
     "bluepages",
     "node-red"
   ],
+  "node-red"     : {
+        "nodes": {
+            "node-red-contrib-ldap-auth": "node-red-contrib-ldap-auth.js"
+        }
+    },
   "repository": {
     "type": "git",
     "url": "https://github.com/hardillb/node-red-contrib-ldap-auth.git"
